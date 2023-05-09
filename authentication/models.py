@@ -1,0 +1,36 @@
+from django.db import models
+
+# Create your models here.
+
+
+class Client(models.Model):
+    id = models.AutoField
+    name = models.CharField(max_length=255)
+    nickname = models.CharField(max_length=255)
+    code = models.CharField(max_length=255)
+    phone = models.CharField(max_length=255)
+    profile = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=False)
+
+
+class Driver(models.Model):
+    id = models.AutoField
+    profile = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    nickname = models.CharField(max_length=255)
+    code = models.CharField(max_length=255)
+    phone = models.CharField(max_length=255)
+    date = models.DateField()
+    department = models.CharField(max_length=255)
+    personal_address = models.CharField(max_length=255)
+    model = models.CharField(max_length=255)
+    color = models.CharField(max_length=255)
+    numbering_plate = models.CharField(max_length=255)
+    vehicle_image = models.CharField(max_length=255)
+    gender = models.IntegerField()
+    state = models.IntegerField()
+    type = models.IntegerField()
+    status = models.IntegerField()
+    is_active = models.BooleanField(default=False)
+    is_subscribe = models.BooleanField(default=False)
+    rating = models.FloatField()

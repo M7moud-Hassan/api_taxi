@@ -20,17 +20,24 @@ def send_code(request):
     if phone:
         auth_code = str(random.randint(100000, 999999))
         message_body = f"Your authentication code is: {auth_code}"
-        message = client.messages.create(
-            body=message_body,
-            from_=from_number,
-            to='+201012139683'
-        )
+        status_message=''
+        try:
+            message = client.messages.create(
+                body=message_body,
+                from_=from_number,
+                to='+201012139683'
+            )
+            status_message=message.status
+        except Exception as e:
+            print('An error occurred:', e)
+            status_message='error'
         user = {
             "phone": phone,
             "code": auth_code
         }
         return Response(status=status.HTTP_200_OK, data={
-            "sid_message": message.status,
+            "code":auth_code,
+            "status_message": status_message,
             "token": account_activation_token.make_token(user)
         })
     else:
@@ -42,7 +49,7 @@ def check_code(request):
     phone = request.data.get('phone')
     code = request.data.get('code')
     token = request.data.get('token')
-    if phone and code:
+    if phone and code and token:
         if account_activation_token.check_token({
             "phone": phone,
             "code": code,

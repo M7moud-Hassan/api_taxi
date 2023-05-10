@@ -14,15 +14,16 @@ class Offer(models.Model):
     status = models.IntegerField()
     numbering_plate = models.CharField(max_length=255)
     vehicle_image = models.CharField(max_length=255)
-    latitude_driver = models.FloatField()
-    longitude_driver = models.FloatField()
-    price = models.FloatField()
-    rating = models.FloatField()
+    latitude_driver = models.DecimalField(max_digits=20,decimal_places=10)
+    longitude_driver =  models.DecimalField(max_digits=20,decimal_places=10)
+    price =  models.DecimalField(max_digits=20,decimal_places=10)
+    rating =  models.DecimalField(max_digits=20,decimal_places=10)
     type_car = models.IntegerField()
     minutes = models.IntegerField()
 
 
 class Order(models.Model):
+    objects = None
     id = models.AutoField
     id_customer = models.CharField(max_length=255)
     profile_customer = models.CharField(max_length=255)
@@ -39,22 +40,18 @@ class Order(models.Model):
     status = models.IntegerField()
     numbering_plate = models.CharField(max_length=255)
     vehicle_image = models.CharField(max_length=255)
-    latitude_my_location = models.FloatField()
-    longitude_my_location = models.FloatField()
-    latitude_destination = models.FloatField()
-    longitude_destination = models.FloatField()
-    latitude_driver = models.FloatField()
-    longitude_driver = models.FloatField()
-    price = models.FloatField()
-    rating_driver = models.FloatField()
+    latitude_my_location = models.DecimalField(max_digits=20,decimal_places=10)
+    longitude_my_location = models.DecimalField(max_digits=20,decimal_places=10)
+    latitude_destination = models.DecimalField(max_digits=20,decimal_places=10)
+    longitude_destination = models.DecimalField(max_digits=20,decimal_places=10)
+    latitude_driver = models.DecimalField(max_digits=20,decimal_places=10)
+    longitude_driver = models.DecimalField(max_digits=20,decimal_places=10)
+    price = models.DecimalField(max_digits=20,decimal_places=10)
+    rating_driver = models.DecimalField(max_digits=20,decimal_places=10)
     type_car = models.IntegerField()
     minutes = models.IntegerField()
-    offers=models.ManyToManyField(Offer)
-    image_payment=models.ImageField(upload_to='images/images_bay/',null=True,)
-
-
-#
-#
+    offers=models.ManyToManyField(Offer,blank=True)
+    image_payment=models.ImageField(upload_to='images/images_bay/',null=True)
 
 #
 #
@@ -65,14 +62,14 @@ class PrivacyPolicy(models.Model):
 #
 #
 class UserCall(models.Model):
-    id = models.CharField(max_length=255)
+    id =models.AutoField
     content = models.CharField(max_length=255)
     number = models.IntegerField()
     is_active = models.BooleanField()
 #
 #
 class ChauffeurCall(models.Model):
-    id = models.CharField(max_length=255)
+    id =models.AutoField
     content = models.CharField(max_length=255)
     number = models.IntegerField()
     is_active = models.BooleanField()

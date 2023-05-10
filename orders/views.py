@@ -1,4 +1,3 @@
-from socket import socket
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -11,7 +10,7 @@ from authentication.serlializers import *
 # Create your views here.
 
 @api_view(['POST'])
-def save_date_driver(request):
+def save_date_order(request):
     order_serializer = OrderSerializer(data=request.data)
     if order_serializer.is_valid():
         order_serializer.save()
@@ -26,7 +25,7 @@ def get_order_by_type_vehicle(request):
     if type:
         orders = Order.objects.filter(type_car=type)
         if orders:
-            return Response(data=OrderSerializer(orders, many=True))
+            return Response(data=OrderSerializer(orders, many=True).data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
     else:
@@ -37,7 +36,7 @@ def get_order_by_type_vehicle(request):
 def get_orders(request):
     orders = Order.objects.all()
     if orders:
-        return Response(data=OrderSerializer(orders, many=True))
+        return Response(data=OrderSerializer(orders, many=True).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -50,11 +49,11 @@ def get_offers_by_orders(request):
         if order:
             offers = order.offers.all()
             if offers:
-                return Response(OfferSerializer(offers, many=True))
+                return Response(OfferSerializer(offers, many=True).data)
             else:
-                return Response(status.HTTP_400_BAD_REQUEST)
+                return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -62,14 +61,14 @@ def get_offers_by_orders(request):
 @api_view(['POST'])
 def upload_image_bay(request):
     order_id = request.data.get('order_id')
-    image = request.data['image']
+    image = request.data.get('image')
     if order_id:
-        order = Order.objcets.filter(id=order_id).first()
+        order = Order.objects.filter(id=order_id).first()
         if order:
             order.image_payment = image
             order.save()
             return Response(data={
-                "image_urls": socket.getfqdn() + '/media/images/images_bay/' + order.image_payment
+                "image_urls":'/media/images/images_bay/' + order.image_payment.url
             })
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -81,7 +80,7 @@ def upload_image_bay(request):
 def get_orders_canceled(request):
     orders = Order.objects.filter(status=Status.cancel)
     if orders:
-        return Response(OrderSerializer(orders, many=True))
+        return Response(OrderSerializer(orders, many=True).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -90,7 +89,7 @@ def get_orders_canceled(request):
 def get_orders_start_finish(request):
     orders = Order.objects.filter(status=Status.start_finish)
     if orders:
-        return Response(OrderSerializer(orders, many=True))
+        return Response(OrderSerializer(orders, many=True).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -99,16 +98,73 @@ def get_orders_start_finish(request):
 def get_orders_start_done(request):
     orders = Order.objects.filter(status=Status.done)
     if orders:
-        return Response(OrderSerializer(orders, many=True))
+        return Response(OrderSerializer(orders, many=True).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
-def get_orders_start_finish(request):
+def get_orders_normal(request):
     orders = Order.objects.filter(status=Status.normal)
     if orders:
-        return Response(OrderSerializer(orders, many=True))
+        return Response(OrderSerializer(orders, many=True).data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def get_all_client(request):
+    clients = Client.objects.all()
+    if clients:
+        return Response(ClientSerializer(clients, many=True).data)
+
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def get_all_drivers(request):
+    drivers = Driver.objects.all()
+    if drivers:
+        return Response(DriverSerializer(drivers, many=True).data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['put'])
+def update_client(request):
+    id = request.data.get('id')
+    if id:
+        client = get_object_or_404(Client, id=id)
+        client_serializer = ClientSerializer(client, data=request.data)
+        if client_serializer.is_valid():
+            client_serializer.save()
+            return Response(data=client_serializer.data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['put'])
+def update_driver(request):
+    id = request.data.get('id')
+    if id:
+        driver = get_object_or_404(Driver, id=id)
+        driver_serilizer = DriverSerializer(driver,data=request.data)
+        if driver_serilizer.is_valid():
+            driver_serilizer.save()
+            return Response(status=status.HTTP_200_OK, data=driver_serilizer.data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def get_driver_old(request):
+    drivers = Driver.objects.filter(is_active=True, is_subscribe=True, status=Status.accept)
+    if drivers:
+        return Response(data=DriverSerializer(drivers, many=True).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -123,89 +179,38 @@ class Status:
     reject = 6
 
 
-@api_view(['GET'])
-def get_all_client(request):
-    clients = Client.objects.all()
-    if clients:
-        return Response(ClientSerializer(clients, many=True))
-
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
 
 @api_view(['GET'])
-def get_all_drivers(request):
-    drivers = Driver.objects.all()
-    if drivers:
-        return Response(DriverSerializer(drivers, many=True))
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['put'])
-def update_client(request):
-    id = request.data.get('id')
-    if id:
-        client = get_object_or_404(Client, id=id)
-        client_serializer = ClientSerializer(client, data=request.data)
-        client_serializer.is_valid()
-        client_serializer.save()
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['put'])
-def update_driver(request):
-    id = request.data.get('id')
-    if id:
-        driver = get_object_or_404(Client, id=id)
-        driver_serializer = DriverSerializer(driver, data=request.data)
-        driver_serializer.is_valid()
-        driver_serializer.save()
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['GET'])
-def get_driver_old():
-    drivers = Driver.objects.filter(is_active=True, is_subscribe=True, status=Status.accept)
-    if drivers:
-        return Response(data=DriverSerializer(drivers, many=True))
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['GET'])
-def get_driver_old_not_subscribe():
+def get_driver_old_not_subscribe(request):
     drivers = Driver.objects.filter(is_active=True, is_subscribe=False, status=Status.accept)
     if drivers:
-        return Response(data=DriverSerializer(drivers, many=True))
+        return Response(data=DriverSerializer(drivers, many=True).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
-def get_driver_new():
+def get_driver_new(request):
     drivers = Driver.objects.filter(is_active=True, is_subscribe=True, status=Status.under_review)
     if drivers:
-        return Response(data=DriverSerializer(drivers, many=True))
+        return Response(data=DriverSerializer(drivers, many=True).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
-def get_driver_banned():
+def get_driver_banned(request):
     drivers = Driver.objects.filter(is_active=False)
     if drivers:
-        return Response(data=DriverSerializer(drivers, many=True))
+        return Response(data=DriverSerializer(drivers, many=True).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
-def get_driver_reject():
+def get_driver_reject(request):
     drivers = Driver.objects.filter(status=Status.reject)
     if drivers:
-        return Response(data=DriverSerializer(drivers, many=True))
+        return Response(data=DriverSerializer(drivers, many=True).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)

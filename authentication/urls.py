@@ -17,6 +17,9 @@ Including another URLconf
 from django.urls import path
 from  .views import  *
 urlpatterns = [
-
     path('sendCode/', send_code),
+    path('checkCode/',check_code),
+    path('saveDataClient/',save_date_client),
+    path('saveDataDriver/',save_date_driver),
+    path('getDataUser/',get_data_user)
 ]

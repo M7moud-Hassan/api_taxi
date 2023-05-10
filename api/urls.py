@@ -20,8 +20,10 @@ from django.urls import path,include
 
 from api import settings
 from  authentication import  urls as urls_auth
+from orders import  urls as urls_order
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/',include(urls_auth) ),
+    path('orders/',include(urls_order))
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

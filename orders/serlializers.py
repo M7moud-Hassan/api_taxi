@@ -7,9 +7,8 @@ class OfferSerializer(serializers.ModelSerializer):
         model = Offer
         fields = '__all__'
 
+
 class OrderSerializer(serializers.ModelSerializer):
-    offers=OfferSerializer(many=True)
     class Meta:
         model = Order
         fields = '__all__'
-

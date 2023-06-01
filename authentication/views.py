@@ -13,10 +13,10 @@ from .serlializers import *
 @api_view(['POST'])
 def send_code(request):
     phone = request.data.get('phone')
-    account_sid = 'AC5222b6d23a983874e494e69de3723572'
-    auth_token = 'e5c7ee4818d48359bb8ada59b7ac05b6'
+    account_sid = ''
+    auth_token = ''
     client = ClientApi(account_sid, auth_token)
-    from_number = '+13203358144'
+    from_number = ''
     if phone:
         auth_code = str(random.randint(100000, 999999))
         message_body = f"Your authentication code is: {auth_code}"

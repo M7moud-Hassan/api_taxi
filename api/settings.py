@@ -78,12 +78,8 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'api_taxi',
-        'USER':'postgres',
-        'PASSWORD':'mahm01142',
-        'HOST':'127.0.0.1',
-        'PORT':5432
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'taxi.sqlite3',
     }
 }
 

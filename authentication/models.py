@@ -1,10 +1,10 @@
 from django.db import models
-
+import uuid
 # Create your models here.
 
 
 class Client(models.Model):
-    id = models.AutoField
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     nickname = models.CharField(max_length=255)
     code = models.CharField(max_length=255,default='123456')
@@ -17,7 +17,7 @@ class Client(models.Model):
 
 
 class Driver(models.Model):
-    id = models.AutoField
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     profile = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     nickname = models.CharField(max_length=255)

@@ -3,31 +3,49 @@ import random
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from twilio.rest import Client as ClientApi
 from .tokens import account_activation_token
 from .models import Client as ClientApp, Driver
 from .serlializers import *
+from infobip_channels.sms.channel import SMSChannel
 
 
 # Create your views here.
 @api_view(['POST'])
 def send_code(request):
+
+    BASE_URL = "zjlww2.api.infobip.com"
+    API_KEY = "c300d4003cf7f0614d0cc258340905f4-8c59b9a0-9442-4cda-8f8b-88d679f80ce0"
     phone = request.data.get('phone')
-    account_sid = ''
-    auth_token = ''
-    client = ClientApi(account_sid, auth_token)
-    from_number = ''
     if phone:
+
         auth_code = str(random.randint(100000, 999999))
         message_body = f"Your authentication code is: {auth_code}"
         status_message=''
         try:
-            message = client.messages.create(
-                body=message_body,
-                from_=from_number,
-                to='+201012139683'
+            channel = SMSChannel.from_auth_params(
+                {
+                    "base_url": BASE_URL,
+                    "api_key": API_KEY,
+                }
             )
-            status_message=message.status
+
+            # Send a message with the desired fields.
+            sms_response = channel.send_sms_message(
+                {
+                    "messages": [
+                        {
+                            "destinations": [{"to": phone}],
+                            "text": message_body,
+                        }
+                    ]
+                }
+            )
+
+            # Get delivery reports for the message. It may take a few seconds show the just-sent message.
+            query_parameters = {"limit": 10}
+            delivery_reports = channel.get_outbound_sms_delivery_reports(query_parameters)
+            print(delivery_reports)
+            status_message=delivery_reports.status_code
         except Exception as e:
             print('An error occurred:', e)
             status_message='error'

@@ -13,7 +13,7 @@ from infobip_channels.sms.channel import SMSChannel
 @api_view(['POST'])
 def send_code(request):
 
-    BASE_URL = "zjlww2.api.infobip.com"
+    BASE_URL = "https://zjlww2.api.infobip.com"
     API_KEY = "c300d4003cf7f0614d0cc258340905f4-8c59b9a0-9442-4cda-8f8b-88d679f80ce0"
     phone = request.data.get('phone')
     if phone:
@@ -48,7 +48,7 @@ def send_code(request):
             status_message=delivery_reports.status_code
         except Exception as e:
             print('An error occurred:', e)
-            status_message='error'
+            status_message=str(e)
         user = {
             "phone": phone,
             "code": auth_code

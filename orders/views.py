@@ -214,3 +214,79 @@ def get_driver_reject(request):
         return Response(data=DriverSerializer(drivers, many=True).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def get_privacy_policy(req):
+    privacy=PrivacyPolicy.objects.first()
+    if privacy:
+        return  Response(status=status.HTTP_200_OK,data=PrivacyPolicySerializer(privacy).data)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def get_ride(req):
+    id=req.data.get('id')
+    if id:
+        order=Order.objects.filter(id=id).first()
+        if order:
+            return  Response(status=status.HTTP_200_OK,data=OrderSerializer(order).data)
+        else:
+            return  Response(status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+def update_order(req):
+    id = req.data.get('id')
+    if id:
+        order = get_object_or_404(Order, id=id)
+        order_serializer = OrderSerializer(order, data=req.data)
+        if order_serializer.is_valid():
+            order_serializer.save()
+            return Response(data=order_serializer.data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+@api_view(['POST'])
+def update_rating_chauffeur(req):
+    id=req.data.get('idDriver')
+    rate=req.data.get('rating')
+    if id and rate:
+        chauffeur=Driver.objects.filter(id=id).first()
+        if chauffeur:
+            rateExit=(chauffeur.rating+float(rate))/2
+            chauffeur.rating=rateExit
+            chauffeur.save()
+            return Response(status=status.HTTP_200_OK,data=DriverSerializer(chauffeur).data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return  Response(status=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+def add_offer(req):
+    id=req.data.get('idOrder')
+    offer=OfferSerializer(data=req.data)
+    if id and offer.is_valid():
+        offer.save()
+        order=Order.objects.filter(id=id).first()
+        if order:
+            order.offers.add(Offer.objects.filter(id=offer.data['id']).first())
+            order.save()
+            return  Response(status=status.HTTP_200_OK,data=OrderSerializer(order).data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+def delete_offer(req):
+    id_order = req.data.get('idOrder')
+    id_offer=req.data.get('idOffer')
+    if id_offer and id_order:
+        order=Order.objects.filter(id=id_order).first()
+        offer=Offer.objects.filter(id=id_offer).first()
+        if order and offer:
+            offer.delete()
+            return Response(status=status.HTTP_200_OK,data=OrderSerializer(order).data)
+        else: return Response(status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)

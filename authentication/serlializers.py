@@ -41,3 +41,20 @@ class DriverSerializer(serializers.ModelSerializer):
         instance.rating = validated_data.get('rating', instance.rating)
         instance.save()
         return instance
+
+
+class CallUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CallUser
+        fields = '__all__'
+
+
+class CallChauffeurSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CallChauffeur
+        fields = '__all__'
+
+class CallChauffeurSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CallChauffeur
+        fields = '__all__'

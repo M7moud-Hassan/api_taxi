@@ -34,5 +34,11 @@ urlpatterns = [
     path('getDriverOldNotSubscribe/',get_driver_old_not_subscribe),
     path('getDriverNew/',get_driver_new),
     path('getDriverBanned/',get_driver_banned),
-    path('getDriverReject/',get_driver_reject)
+    path('getDriverReject/',get_driver_reject),
+    path('getPrivacyPolicy/',get_privacy_policy),
+    path('getRide/',get_ride),
+    path('updateRide/',update_order),
+    path('updateRatingChauffeur/',update_rating_chauffeur),
+    path('addOffer/',add_offer),
+    path('deleteOffer/',delete_offer)
 ]

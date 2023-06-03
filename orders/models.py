@@ -50,7 +50,7 @@ class Order(models.Model):
     typeCar = models.IntegerField()
     minutes = models.IntegerField()
     offers=models.ManyToManyField(Offer,blank=True)
-    imagePayment=models.CharField(max_length=255)
+    imagePayment=models.CharField(max_length=255,default='')
 
 #
 #

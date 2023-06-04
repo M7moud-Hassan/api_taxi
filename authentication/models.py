@@ -43,22 +43,3 @@ class Driver(models.Model):
     def __str__(self):
         return self.name
 
-
-class CallUser(models.Model):
-    id = models.AutoField
-    phoneNumber = models.CharField(max_length=20)
-    email = models.EmailField()
-    facebook = models.URLField()
-
-    def __str__(self):
-        return self.phoneNumber
-
-
-class CallChauffeur(models.Model):
-    id = models.AutoField
-    phoneNumber = models.CharField(max_length=20)
-    email = models.EmailField()
-    facebook = models.URLField()
-
-    def __str__(self):
-        return self.phoneNumber

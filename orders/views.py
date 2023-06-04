@@ -290,3 +290,16 @@ def delete_offer(req):
         else: return Response(status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_call_user(request):
+    calls=UserCall.objects.all()
+    userCalls=CallUserSerializer(calls,many=True).data
+    return Response(status=status.HTTP_200_OK,data=userCalls)
+
+@api_view(['GET'])
+def get_call_chauffeur(request):
+    data=ChauffeurCall.objects.all()
+    userCalls=CallChauffeurSerializer(data,many=True)
+    return Response(status=status.HTTP_200_OK,data=userCalls.data)

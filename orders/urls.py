@@ -40,5 +40,7 @@ urlpatterns = [
     path('updateRide/',update_order),
     path('updateRatingChauffeur/',update_rating_chauffeur),
     path('addOffer/',add_offer),
-    path('deleteOffer/',delete_offer)
+    path('deleteOffer/',delete_offer),
+    path('getCallsUser/', get_call_user),
+    path('getCallsChauffeur/', get_call_chauffeur)
 ]

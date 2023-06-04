@@ -22,6 +22,5 @@ urlpatterns = [
     path('saveDataClient/',save_date_client),
     path('saveDataDriver/',save_date_driver),
     path('getDataUser/',get_data_user),
-    path('getCallsUser/',get_call_user),
-    path('getCallsChauffeur/',get_call_chauffeur)
+
 ]

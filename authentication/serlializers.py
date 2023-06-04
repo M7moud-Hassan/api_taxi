@@ -43,18 +43,5 @@ class DriverSerializer(serializers.ModelSerializer):
         return instance
 
 
-class CallUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CallUser
-        fields = '__all__'
 
 
-class CallChauffeurSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CallChauffeur
-        fields = '__all__'
-
-class CallChauffeurSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CallChauffeur
-        fields = '__all__'

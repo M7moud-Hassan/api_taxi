@@ -4,3 +4,5 @@ from  .models import  *
 admin.site.register(Order)
 admin.site.register(Offer)
 admin.site.register(PrivacyPolicy)
+admin.site.register(UserCall)
+admin.site.register(ChauffeurCall)

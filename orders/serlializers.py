@@ -47,3 +47,15 @@ class PrivacyPolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = PrivacyPolicy
         fields = '__all__'
+
+
+class CallUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserCall
+        fields = '__all__'
+
+
+class CallChauffeurSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChauffeurCall
+        fields = '__all__'
